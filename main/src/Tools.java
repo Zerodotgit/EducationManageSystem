@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Tools {
 
-    //打印菜单
+    //打印主菜单
     public static void printMainMenu(){
         System.out.println("""
                 ===欢迎进入教育管理系统===
@@ -27,6 +27,20 @@ public class Tools {
                 6.返回主菜单
                 """);
         System.out.println("请输入选择");
+    }
+
+    //打印学生管理菜单
+    public static  void printManageStudentMenu(){
+        System.out.println("""
+                ===管理学生===
+                1.添加学生
+                2.查看学生信息
+                3.修改学生信息
+                4.删除学生信息
+                5.列出已存储学生
+                6.返回主菜单
+                """);
+        System.out.println("请输入选择:");
     }
 
     //生成学生学号或教师工号
@@ -85,6 +99,7 @@ public class Tools {
         System.out.println();
     }
 
+    //打印修改教师信息菜单
     public static void printEditTeacherInfoMenu(){
         System.out.println("===教师信息修改===");
         System.out.println("""
@@ -97,6 +112,7 @@ public class Tools {
 
     }
 
+    //执行教师信息修改操作
     public static void editTeacherInfoOperator(ArrayList<Teachers> teachers, int choice, int who){
         //必要对象
         Scanner sc = new Scanner(System.in);
@@ -146,4 +162,30 @@ public class Tools {
         return !students.isEmpty();
     }
 
+    //打印学生信息
+    public static void printStudentInfo(ArrayList<Students> student , int who){
+        System.out.println("姓名\t" + student.get(who).getName());
+        System.out.println("性别\t" + student.get(who).getSex());
+        System.out.println("年龄\t" + student.get(who).getAge());
+        System.out.println("学号\t" + student.get(who).getNumber());
+
+        //打印成绩
+        System.out.println("成绩：");
+        for (int i = 0; i < student.get(who).getScores().length; i++) {
+            System.out.print(student.get(who).getScores()[i] + "\t");
+        }
+        System.out.println();
+    }
+
+    //打印修改学生信息菜单
+    public static void printEditStudentInfoMenu(){
+        System.out.println("===学生信息修改===");
+        System.out.println("""
+                1.修改姓名
+                2.修改性别
+                3.修改年龄
+                4.修改成绩
+                """);
+        System.out.println("请输入选择");
+    }
 }

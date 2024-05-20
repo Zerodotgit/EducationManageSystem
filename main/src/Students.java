@@ -12,7 +12,7 @@ public class Students extends People{
         this.scores = scores;
     }
 
-    //get与setter
+    //getter与setter
     public double[] getScores() {
         return scores;  //这里是返回地址
     }

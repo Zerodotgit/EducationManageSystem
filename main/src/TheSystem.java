@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,6 +33,7 @@ public class TheSystem {
                     break;
                 case 2:
                     //管理学生
+                    manageStudent();
                     break;
                 default:
                     //退出
@@ -132,9 +135,11 @@ public class TheSystem {
                 System.out.println("工号\t" + teachers.get(i).getNumber());
                 System.out.println("授教课程\t" + teachers.get(i).getMajor());
                 System.out.println("薪资\t" + teachers.get(i).getPay());
-
+                return;
             }
         }
+
+        System.out.println("未查找到对应教师信息");
     }
 
     //打印已存储的学生或者教师列表
@@ -231,5 +236,185 @@ public class TheSystem {
                 return;
             }
         }
+    }
+
+    //管理学生
+    private void manageStudent(){
+        while (true) {
+            Tools.printManageStudentMenu();
+            choice = sc.nextInt();
+            switch (choice){
+                case 1:
+                    //添加学生
+                    students.add(addStudent());
+                    break;
+                case 2:
+                    //查看学生信息
+                    showStudentInfo(students);
+                    break;
+                case 3:
+                    //修改学生信息
+                    editStudentInfo();
+                    break;
+                case 4:
+                    //删除学生信息
+                    deleteStudent(students);
+                    break;
+                case 5:
+                    //列出已存储学生
+                    showPeople(1);
+                    break;
+                case 6:
+                    //返回上一级菜单
+                    System.out.println("返回上一级菜单...");
+                    return;
+            }
+        }
+    }
+
+    //添加学生信息
+    private Students addStudent(){
+        Students student = new Students();
+        System.out.println("请输入学生姓名");
+        student.setName(sc.next());
+        System.out.println("请输入学生年龄");
+        student.setAge(sc.nextInt());
+        System.out.println("请输入学生性别");
+        student.setSex(sc.next());
+
+        //生成学生学号
+        //判断当前系统是否存在学生
+        if(students.isEmpty()){
+            //系统中不存在学生信息
+            student.setNumber(Tools.generateNumber(1));
+        }else{
+            //判断生成的学号是否重复
+            student.setNumber(Tools.generateNumber(1));
+            for (int i = 0; i < students.size(); i++) {
+                if(students.get(i).getNumber().equals(student.getNumber()));{
+                    //学生学号重复
+                    student.setNumber(Tools.generateNumber(1));
+                }
+            }
+        }
+
+        //初始化学生成绩
+        double[] score = new double[3];
+        for (int i = 0; i < score.length; i++) {
+            score[i] = 0.0;
+        }
+        student.setScores(score);
+
+        //输出日志
+        System.out.println("已添加学生：" + student.getName() + "\t" +"学号：" + student.getNumber());
+
+        return student;
+    }
+
+    //查看学生信息
+    private void showStudentInfo(ArrayList<Students> student){
+        //判断系统中是否存在学生信息
+        if(student.isEmpty()){
+            System.out.println("当前系统中没有任何学生信息");
+            return;
+        }
+        System.out.println("请输入学号");
+        inputString = sc.next();
+        for (int i = 0; i < student.size(); i++) {
+            if(student.get(i).getNumber().equals(inputString)){
+                //打印对应学生信息
+                Tools.printStudentInfo(student , i);
+                return;
+            }
+        }
+        System.out.println("为查找到对应学生信息");
+
+    }
+
+    //修改学生信息
+    private void editStudentInfo(){
+        //判断系统中是否存在学生信息
+        if(students.isEmpty()){
+            System.out.println("当前系统中没有任何学生信息");
+            return;
+        }
+
+        //系统中存在学生信息
+        System.out.println("请输入欲修改学生的学号");
+        inputString = sc.next();
+        for (int i = 0; i < students.size(); i++) {
+            if(students.get(i).getNumber().equals(inputString)){
+                //找到对应学生
+                while (true) {
+                    Tools.printEditStudentInfoMenu();
+                    choice = sc.nextInt();
+                    switch (choice){
+                        case 1:
+                            //修改姓名
+                            System.out.println("请输入新的姓名");
+                            students.get(i).setName(sc.next());
+                            System.out.println("操作完成"); //输出日志
+                            return;
+                        case 2:
+                            //修改性别
+                            System.out.println("请输入新的性别");
+                            students.get(i).setSex(sc.next());
+                            System.out.println("操作完成"); //输出日志
+                            return;
+                        case 3:
+                            //修改年龄
+                            System.out.println("请输入新的年龄");
+                            students.get(i).setAge(sc.nextInt());
+                            System.out.println("操作完成"); //输出日志
+                            return;
+                        case 4:
+                            //修改成绩
+                            for (int j = 0; j < students.get(i).getScores().length; j++) {
+                                System.out.println("请输入第" + (j + 1) + "门课的成绩");
+                                students.get(i).getScores()[j] = sc.nextDouble();
+                            }
+                            System.out.println("操作完成"); //输出日志
+                            return;
+                        default:
+                            System.out.println("输入有误");
+                            return;
+                    }
+                }
+            }
+        }
+    }
+
+    //删除学生信息
+    private void deleteStudent(ArrayList<Students> students){
+        //判断系统中是否有学生信息
+        if(students.isEmpty()){
+            //没有学生信息
+            System.out.println("当前系统中没有任何学生信息");
+        }else{
+            //系统中存在学生信息
+            System.out.println("请输入欲删除学生信息的学号");
+            inputString = sc.next();
+            for (int i = 0; i < students.size(); i++) {
+                if(students.get(i).getNumber().equals(inputString)){
+                    //再次确认是否执行删除
+                    System.out.println("已找到学生：" + students.get(i).getName() + "\t" + "学号：" + students.get(i).getNumber());
+                    System.out.println("是否执行删除？（0.否，1是）");
+                    choice = sc.nextInt();
+                    switch (choice){
+                        case 0:
+                            //不进行删除
+                            System.out.println("学生" + students.get(i).getName() + "未删除");  //输出日志
+                            return;
+                        case 1:
+                            //执行删除
+                            students.remove(i);
+                            System.out.println("学生" +students.get(i).getName() + "删除成功");
+                    }
+                }else{
+                    System.out.println("系统中目前没有该学生信息");
+                }
+            }
+        }
+
     }
 }
